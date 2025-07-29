@@ -1,0 +1,78 @@
+[gd_scene load_steps=10 format=3 uid="uid://btsfrucmuldrv"]
+
+[ext_resource type="Script" path="res://CharacterBody2d.cs" id="1_akv8y"]
+[ext_resource type="Texture2D" uid="uid://c1np7vnfjt5ga" path="res://icon.svg" id="1_fhuox"]
+[ext_resource type="Script" path="res://TestFootWare.cs" id="3_vf6ay"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_7je4w"]
+friction = 0.53
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p8p2w"]
+size = Vector2(1200, 200)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o3hh8"]
+size = Vector2(120, 120)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dtnnr"]
+size = Vector2(20, 800)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2g664"]
+size = Vector2(20, 800)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_prlfd"]
+bg_color = Color(0, 0, 0, 0.27451)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(600, 700)
+physics_material_override = SubResource("PhysicsMaterial_7je4w")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("RectangleShape2D_p8p2w")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+position = Vector2(600, 535)
+script = ExtResource("1_akv8y")
+
+[node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
+texture = ExtResource("1_fhuox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+shape = SubResource("RectangleShape2D_o3hh8")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+position = Vector2(-10, 400)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+shape = SubResource("RectangleShape2D_dtnnr")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="."]
+position = Vector2(1210, 400)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
+shape = SubResource("RectangleShape2D_2g664")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Panel" type="Panel" parent="CanvasLayer"]
+visible = false
+offset_left = 300.0
+offset_top = 200.0
+offset_right = 900.0
+offset_bottom = 600.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_prlfd")
+
+[node name="TestFootWare" type="TextureButton" parent="CanvasLayer/Panel"]
+z_index = 1
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 100.0
+script = ExtResource("3_vf6ay")
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasLayer/Panel/TestFootWare"]
+position = Vector2(50, 50)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("1_fhuox")
+
+[connection signal="pressed" from="CanvasLayer/Panel/TestFootWare" to="CharacterBody2D" method="_on_test_foot_ware_pressed"]
