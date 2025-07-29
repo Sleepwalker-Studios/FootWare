@@ -23,6 +23,8 @@ public partial class CharacterBody2d : CharacterBody2D
 	public int downspeed = 800;
 	public int state = 1;
 	
+	public bool flipped;
+	
 	public override void _Ready() {
 		panel = GetParent().GetNode<Panel>("CanvasLayer/Panel");
 		test = GetParent().GetNode<TextureButton>("CanvasLayer/Panel/TestFootWare");
@@ -60,11 +62,13 @@ public partial class CharacterBody2d : CharacterBody2D
 		}
 		
 		if(IsOnFloor() && Input.IsActionPressed("ui_jump")){
+			flipped = false;
 			velocity.Y = jumpspeed;
 		}
 		
-		if(!IsOnFloor() && Input.IsActionJustPressed("ui_up")){
+		if(!IsOnFloor() && Input.IsActionJustPressed("ui_up") && !flipped){
 			velocity.Y += jumpspeed + 100;
+			flipped = true;
 		}
 		
 		if(!IsOnFloor() && Input.IsActionPressed("ui_down")){

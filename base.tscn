@@ -31,6 +31,13 @@ physics_material_override = SubResource("PhysicsMaterial_7je4w")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 shape = SubResource("RectangleShape2D_p8p2w")
 
+[node name="ColorRect" type="ColorRect" parent="StaticBody2D"]
+offset_left = -600.0
+offset_top = -100.0
+offset_right = 600.0
+offset_bottom = 100.0
+color = Color(0, 0, 0, 1)
+
 [node name="CharacterBody2D" type="CharacterBody2D" parent="."]
 position = Vector2(600, 535)
 script = ExtResource("1_akv8y")
@@ -40,6 +47,12 @@ texture = ExtResource("1_fhuox")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
 shape = SubResource("RectangleShape2D_o3hh8")
+
+[node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
+offset = Vector2(0, -100)
+zoom = Vector2(1.2, 1.2)
+position_smoothing_enabled = true
+position_smoothing_speed = 120.0
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="."]
 position = Vector2(-10, 400)
