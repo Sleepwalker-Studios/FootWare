@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://btsfrucmuldrv"]
+[gd_scene load_steps=12 format=3 uid="uid://btsfrucmuldrv"]
 
 [ext_resource type="Script" path="res://CharacterBody2d.cs" id="1_akv8y"]
 [ext_resource type="Texture2D" uid="uid://c1np7vnfjt5ga" path="res://icon.svg" id="1_fhuox"]
@@ -23,6 +23,9 @@ size = Vector2(20, 800)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_prlfd"]
 bg_color = Color(0, 0, 0, 0.27451)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3mq3y"]
+size = Vector2(200, 50)
 
 [node name="Node2D" type="Node2D"]
 
@@ -205,4 +208,25 @@ position = Vector2(50, 50)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("1_fhuox")
 
+[node name="Coyote" type="Timer" parent="."]
+wait_time = 0.3
+
+[node name="Buffer" type="Timer" parent="."]
+wait_time = 0.2
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="."]
+position = Vector2(200, 450)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D4"]
+shape = SubResource("RectangleShape2D_3mq3y")
+
+[node name="ColorRect" type="ColorRect" parent="StaticBody2D4"]
+offset_left = -100.0
+offset_top = -25.0
+offset_right = 100.0
+offset_bottom = 25.0
+color = Color(0, 0, 0, 1)
+
 [connection signal="pressed" from="CanvasLayer/Panel/TestFootWare" to="CharacterBody2D" method="_on_test_foot_ware_pressed"]
+[connection signal="timeout" from="Coyote" to="CharacterBody2D" method="_on_coyote_timeout"]
+[connection signal="timeout" from="Buffer" to="CharacterBody2D" method="_on_buffer_timeout"]
