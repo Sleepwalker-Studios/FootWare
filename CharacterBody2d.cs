@@ -12,6 +12,14 @@ public partial class CharacterBody2d : CharacterBody2D
 	public Panel panel;
 	public TextureButton test;
 	public Camera2D camera;
+	public VScrollBar speedbar;
+	public VScrollBar jumpbar;
+	public VScrollBar gravbar;
+	public VScrollBar djbar;
+	public Label speedlabel;
+	public Label gravlabel;
+	public Label jumplabel;
+	public Label djlabel;
 	
 	public enum footware{none, test};
 	
@@ -22,6 +30,7 @@ public partial class CharacterBody2d : CharacterBody2D
 	public int gravityspeed = 1300;
 	public int jumpspeed = -500;
 	public int downspeed = 800;
+	public int doublejump = -250;
 	public int state = 1;
 	
 	public bool flipped;
@@ -31,10 +40,27 @@ public partial class CharacterBody2d : CharacterBody2D
 		panel = GetParent().GetNode<Panel>("CanvasLayer/Panel");
 		test = GetParent().GetNode<TextureButton>("CanvasLayer/Panel/TestFootWare");
 		camera = GetNode<Camera2D>("Camera2D");
+		speedbar = GetNode<VScrollBar>("SpeedBar");
+		gravbar = GetNode<VScrollBar>("GravBar");
+		jumpbar = GetNode<VScrollBar>("JumpBar");
+		djbar = GetNode<VScrollBar>("DJBar");
+		speedlabel = GetNode<Label>("SpeedBar/Label");
+		gravlabel = GetNode<Label>("GravBar/Label");
+		jumplabel = GetNode<Label>("JumpBar/Label");
+		djlabel = GetNode<Label>("DJBar/Label");
 		current = footware.none;
 	}
 	
 	public override void _PhysicsProcess(double delta) {
+		
+		speed = (int)speedbar.Value;
+		gravityspeed = (int)gravbar.Value;
+		jumpspeed = (int)jumpbar.Value;
+		doublejump = (int)djbar.Value;
+		speedlabel.Text = ((int)speedbar.Value).ToString();
+		gravlabel.Text = ((int)gravbar.Value).ToString();
+		jumplabel.Text = ((int)jumpbar.Value).ToString();
+		djlabel.Text = ((int)djbar.Value).ToString();
 		
 		if (Input.IsActionPressed("ui_z")) {
 			camera.Zoom += new Vector2(-0.01f, -0.01f);
@@ -83,7 +109,7 @@ public partial class CharacterBody2d : CharacterBody2D
 		}
 		
 		if(!IsOnFloor() && Input.IsActionJustPressed("ui_up") && !flipped && !paused){
-			velocity.Y += jumpspeed + 250;
+			velocity.Y += doublejump;
 			flipped = true;
 		}
 		

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://btsfrucmuldrv"]
+[gd_scene load_steps=11 format=3 uid="uid://btsfrucmuldrv"]
 
 [ext_resource type="Script" path="res://CharacterBody2d.cs" id="1_akv8y"]
 [ext_resource type="Texture2D" uid="uid://c1np7vnfjt5ga" path="res://icon.svg" id="1_fhuox"]
@@ -12,6 +12,8 @@ size = Vector2(5000, 200)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o3hh8"]
 size = Vector2(120, 120)
+
+[sub_resource type="LabelSettings" id="LabelSettings_fwuvw"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dtnnr"]
 size = Vector2(20, 800)
@@ -53,6 +55,99 @@ shape = SubResource("RectangleShape2D_o3hh8")
 offset = Vector2(0, -100)
 position_smoothing_enabled = true
 position_smoothing_speed = 120.0
+
+[node name="SpeedBar" type="VScrollBar" parent="CharacterBody2D"]
+offset_left = 100.0
+offset_top = -200.0
+offset_right = 120.0
+min_value = 200.0
+max_value = 600.0
+value = 400.0
+
+[node name="Label" type="Label" parent="CharacterBody2D/SpeedBar"]
+layout_mode = 0
+offset_left = -10.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = -7.0
+text = "100"
+label_settings = SubResource("LabelSettings_fwuvw")
+
+[node name="Label2" type="Label" parent="CharacterBody2D/SpeedBar"]
+layout_mode = 0
+offset_left = -15.0
+offset_top = 200.0
+offset_right = 33.0
+offset_bottom = 223.0
+text = "Speed"
+
+[node name="JumpBar" type="VScrollBar" parent="CharacterBody2D"]
+offset_left = 150.0
+offset_top = -200.0
+offset_right = 170.0
+min_value = -700.0
+max_value = -300.0
+value = -500.0
+
+[node name="Label" type="Label" parent="CharacterBody2D/JumpBar"]
+offset_left = -10.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = -7.0
+text = "100"
+label_settings = SubResource("LabelSettings_fwuvw")
+
+[node name="Label2" type="Label" parent="CharacterBody2D/JumpBar"]
+offset_left = -10.0
+offset_top = 200.0
+offset_right = 38.0
+offset_bottom = 223.0
+text = "Jump"
+
+[node name="GravBar" type="VScrollBar" parent="CharacterBody2D"]
+offset_left = 200.0
+offset_top = -200.0
+offset_right = 220.0
+min_value = 900.0
+max_value = 1700.0
+value = 1300.0
+
+[node name="Label" type="Label" parent="CharacterBody2D/GravBar"]
+offset_left = -10.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = -7.0
+text = "100"
+label_settings = SubResource("LabelSettings_fwuvw")
+
+[node name="Label2" type="Label" parent="CharacterBody2D/GravBar"]
+offset_left = -10.0
+offset_top = 200.0
+offset_right = 38.0
+offset_bottom = 223.0
+text = "Grav"
+
+[node name="DJBar" type="VScrollBar" parent="CharacterBody2D"]
+offset_left = 250.0
+offset_top = -200.0
+offset_right = 270.0
+min_value = -400.0
+max_value = -100.0
+value = -250.0
+
+[node name="Label" type="Label" parent="CharacterBody2D/DJBar"]
+offset_left = -10.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = -7.0
+text = "100"
+label_settings = SubResource("LabelSettings_fwuvw")
+
+[node name="Label2" type="Label" parent="CharacterBody2D/DJBar"]
+offset_top = 200.0
+offset_right = 48.0
+offset_bottom = 223.0
+text = "DJ"
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="."]
 position = Vector2(-10, 400)
