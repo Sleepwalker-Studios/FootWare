@@ -30,8 +30,10 @@ public partial class CharacterBody2d : CharacterBody2D
 	public int gravityspeed = 1300;
 	public int jumpspeed = -500;
 	public int downspeed = 800;
-	public int doublejump = -250;
+	public int doublejump = 300;
 	public int state = 1;
+	
+	public double djtimer;
 	
 	public bool flipped;
 	public bool paused;
@@ -109,8 +111,15 @@ public partial class CharacterBody2d : CharacterBody2D
 		}
 		
 		if(!IsOnFloor() && Input.IsActionJustPressed("ui_up") && !flipped && !paused){
-			velocity.Y += doublejump;
+			djtimer = 0.13;
 			flipped = true;
+		}
+		if(djtimer > 0.0) {
+			velocity.Y /= doublejump;
+			djtimer -= delta;
+		}
+		else {
+			djtimer = 0.0;
 		}
 		
 		if(!IsOnFloor() && Input.IsActionPressed("ui_down") && !paused){

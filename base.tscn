@@ -131,9 +131,9 @@ text = "Grav"
 offset_left = 250.0
 offset_top = -200.0
 offset_right = 270.0
-min_value = -400.0
-max_value = -100.0
-value = -250.0
+min_value = 65.0
+max_value = 650.0
+value = 300.0
 
 [node name="Label" type="Label" parent="CharacterBody2D/DJBar"]
 offset_left = -10.0
