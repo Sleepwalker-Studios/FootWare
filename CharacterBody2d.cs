@@ -73,7 +73,7 @@ public partial class CharacterBody2d : CharacterBody2D
 		}
 		
 		if(!IsOnFloor() && Input.IsActionJustPressed("ui_up") && !flipped && !paused){
-			velocity.Y += jumpspeed - 200;
+			velocity.Y += jumpspeed + 300;
 			flipped = true;
 		}
 		
