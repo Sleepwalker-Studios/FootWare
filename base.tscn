@@ -87,7 +87,7 @@ offset_top = -200.0
 offset_right = 170.0
 min_value = -700.0
 max_value = -300.0
-value = -500.0
+value = -400.0
 
 [node name="Label" type="Label" parent="CharacterBody2D/JumpBar"]
 offset_left = -10.0
