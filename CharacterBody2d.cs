@@ -11,6 +11,7 @@ public partial class CharacterBody2d : CharacterBody2D
 	
 	public Panel panel;
 	public TextureButton test;
+	public Camera2D camera;
 	
 	public enum footware{none, test};
 	
@@ -29,10 +30,19 @@ public partial class CharacterBody2d : CharacterBody2D
 	public override void _Ready() {
 		panel = GetParent().GetNode<Panel>("CanvasLayer/Panel");
 		test = GetParent().GetNode<TextureButton>("CanvasLayer/Panel/TestFootWare");
+		camera = GetNode<Camera2D>("Camera2D");
 		current = footware.none;
 	}
 	
 	public override void _PhysicsProcess(double delta) {
+		
+		if (Input.IsActionPressed("ui_z")) {
+			camera.Zoom += new Vector2(-0.01f, -0.01f);
+		}
+		if (Input.IsActionPressed("ui_x")) {
+			camera.Zoom += new Vector2(0.01f, 0.01f);
+		}
+
 
 		Vector2 velocity = Velocity;
 		if(paused && IsOnFloor()) {
@@ -73,7 +83,7 @@ public partial class CharacterBody2d : CharacterBody2D
 		}
 		
 		if(!IsOnFloor() && Input.IsActionJustPressed("ui_up") && !flipped && !paused){
-			velocity.Y += jumpspeed + 300;
+			velocity.Y += jumpspeed + 250;
 			flipped = true;
 		}
 		
