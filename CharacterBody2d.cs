@@ -24,6 +24,7 @@ public partial class CharacterBody2d : CharacterBody2D
 	public int state = 1;
 	
 	public bool flipped;
+	public bool paused;
 	
 	public override void _Ready() {
 		panel = GetParent().GetNode<Panel>("CanvasLayer/Panel");
@@ -34,47 +35,51 @@ public partial class CharacterBody2d : CharacterBody2D
 	public override void _PhysicsProcess(double delta) {
 
 		Vector2 velocity = Velocity;
-		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-		if(IsOnFloor()){
-			if(Input.IsActionPressed("shift")){
-				velocity.X = direction.X * speed/3;
-			}
-			else {
-				velocity.X = direction.X * speed;
-			}
+		if(paused && IsOnFloor()) {
+			velocity = Vector2.Zero;
 		}
-		else{
-			velocity.X += direction.X * (speed/30);
-			if(velocity.X >= 400 || velocity.X <= -400){
-				if(velocity.X > 0){
-					velocity.X = 400;
+		if(!paused) {
+			Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
+			if(IsOnFloor()){
+				if(Input.IsActionPressed("shift")){
+					velocity.X = direction.X * speed/3;
 				}
-				else{
-					velocity.X = -400;
+				else {
+					velocity.X = direction.X * speed;
 				}
 			}
-		}
+			else{
+				velocity.X += direction.X * (speed/30);
+				if(velocity.X >= 400 || velocity.X <= -400){
+					if(velocity.X > 0){
+						velocity.X = 400;
+					}
+					else{
+						velocity.X = -400;
+					}
+				}
+			}
+			
+		}	
 		if(!IsOnFloor()){
 			velocity.Y += gravityspeed * (float)delta;
 		}
 		else{
 			velocity.Y = 0;
 		}
-		
-		if(IsOnFloor() && Input.IsActionPressed("ui_jump")){
+		if(IsOnFloor() && Input.IsActionPressed("ui_jump") && !paused){
 			flipped = false;
 			velocity.Y = jumpspeed;
 		}
 		
-		if(!IsOnFloor() && Input.IsActionJustPressed("ui_up") && !flipped){
-			velocity.Y += jumpspeed + 100;
+		if(!IsOnFloor() && Input.IsActionJustPressed("ui_up") && !flipped && !paused){
+			velocity.Y += jumpspeed - 200;
 			flipped = true;
 		}
 		
-		if(!IsOnFloor() && Input.IsActionPressed("ui_down")){
+		if(!IsOnFloor() && Input.IsActionPressed("ui_down") && !paused){
 			velocity.Y += downspeed * (float)delta;
 		}
-		
 		Velocity = velocity;
 		MoveAndSlide();
 
@@ -86,10 +91,12 @@ public partial class CharacterBody2d : CharacterBody2D
 	
 	public void togglemenu(){
 		if(panel.Visible == true){
+			paused = false;
 			Engine.TimeScale = 1.0f;
 			state = 1;
 		}
 		else {
+			paused = true;
 			Engine.TimeScale = 0.2f;
 			state = 2;
 		}
