@@ -149,6 +149,28 @@ offset_right = 48.0
 offset_bottom = 223.0
 text = "DJ"
 
+[node name="DJTBar" type="VScrollBar" parent="CharacterBody2D"]
+offset_left = 300.0
+offset_top = -200.0
+offset_right = 320.0
+min_value = 0.05
+max_value = 0.2
+value = 0.13
+
+[node name="Label" type="Label" parent="CharacterBody2D/DJTBar"]
+offset_left = -10.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = -7.0
+text = "100"
+label_settings = SubResource("LabelSettings_fwuvw")
+
+[node name="Label2" type="Label" parent="CharacterBody2D/DJTBar"]
+offset_top = 200.0
+offset_right = 48.0
+offset_bottom = 223.0
+text = "DJT"
+
 [node name="StaticBody2D2" type="StaticBody2D" parent="."]
 position = Vector2(-10, 400)
 

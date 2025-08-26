@@ -16,10 +16,12 @@ public partial class CharacterBody2d : CharacterBody2D
 	public VScrollBar jumpbar;
 	public VScrollBar gravbar;
 	public VScrollBar djbar;
+	public VScrollBar djtbar;
 	public Label speedlabel;
 	public Label gravlabel;
 	public Label jumplabel;
 	public Label djlabel;
+	public Label djtlabel;
 	
 	public enum footware{none, test};
 	
@@ -33,6 +35,7 @@ public partial class CharacterBody2d : CharacterBody2D
 	public int doublejump = 300;
 	public int state = 1;
 	
+	public double djt;
 	public double djtimer;
 	
 	public bool flipped;
@@ -46,10 +49,12 @@ public partial class CharacterBody2d : CharacterBody2D
 		gravbar = GetNode<VScrollBar>("GravBar");
 		jumpbar = GetNode<VScrollBar>("JumpBar");
 		djbar = GetNode<VScrollBar>("DJBar");
+		djtbar = GetNode<VScrollBar>("DJTBar");
 		speedlabel = GetNode<Label>("SpeedBar/Label");
 		gravlabel = GetNode<Label>("GravBar/Label");
 		jumplabel = GetNode<Label>("JumpBar/Label");
 		djlabel = GetNode<Label>("DJBar/Label");
+		djtlabel = GetNode<Label>("DJTBar/Label");
 		current = footware.none;
 	}
 	
@@ -59,10 +64,12 @@ public partial class CharacterBody2d : CharacterBody2D
 		gravityspeed = (int)gravbar.Value;
 		jumpspeed = (int)jumpbar.Value;
 		doublejump = (int)djbar.Value;
+		djt = djtbar.Value;
 		speedlabel.Text = ((int)speedbar.Value).ToString();
 		gravlabel.Text = ((int)gravbar.Value).ToString();
 		jumplabel.Text = ((int)jumpbar.Value).ToString();
 		djlabel.Text = ((int)djbar.Value).ToString();
+		djtlabel.Text = (djtbar.Value).ToString();
 		
 		if (Input.IsActionPressed("ui_z")) {
 			camera.Zoom += new Vector2(-0.01f, -0.01f);
@@ -111,7 +118,7 @@ public partial class CharacterBody2d : CharacterBody2D
 		}
 		
 		if(!IsOnFloor() && Input.IsActionJustPressed("ui_up") && !flipped && !paused){
-			djtimer = 0.13;
+			djtimer = djt;
 			flipped = true;
 		}
 		if(djtimer > 0.0) {
