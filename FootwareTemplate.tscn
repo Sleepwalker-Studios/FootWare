@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://f3wqgo50y6pc"]
+
+[ext_resource type="Script" path="res://FootwareTemplate.cs" id="1_7e2cb"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_66rsr"]
+radius = 48.0
+
+[node name="Area2D" type="Area2D"]
+collision_layer = 2
+script = ExtResource("1_7e2cb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_66rsr")

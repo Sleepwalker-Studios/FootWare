@@ -215,4 +215,96 @@ public partial class CharacterBody2d : CharacterBody2D
 	public void _on_buffer_timeout() {
 		bufferbool = false;
 	}
+	
+	public override void _Input(InputEvent @event)
+	{
+		if (@event.IsActionPressed("shoot"))
+		{
+			ShootBullet();
+		}
+		else if (@event.IsActionPressed("kick"))
+		{
+			PerformKick();
+		}
+		else if (@event.IsActionPressed("pull"))
+		{
+			CreatePullEffect();
+		}
+	}
+	
+	private void ShootBullet()
+	{
+		var mousePos = GetGlobalMousePosition();
+		var direction = (mousePos - GlobalPosition).Normalized();
+		
+		var config = new FootwareConfig
+		{
+			StartPosition = GlobalPosition,
+			Direction = direction,
+			Speed = 500f,
+			Pull = false,
+			Damage = 25,
+			Lifetime = 3f,
+			DestroyOnHit = true
+		};
+		
+		CreateFootwareWithConfig(config);
+	}
+	
+	private void PerformKick()
+	{
+		var config = new FootwareConfig
+		{
+			StartPosition = GlobalPosition,
+			Direction = Vector2.Zero,
+			Speed = 0f,
+			Pull = false,
+			Damage = 50,
+			Lifetime = 0.5f,
+			DestroyOnHit = false
+		};
+		
+		CreateFootwareWithConfig(config);
+	}
+	
+	private void CreatePullEffect()
+	{
+		var config = new FootwareConfig
+		{
+			StartPosition = GlobalPosition,
+			Direction = Vector2.Zero,
+			Speed = 0f,
+			Pull = true,
+			Damage = 0,
+			Lifetime = 2f,
+			DestroyOnHit = false,
+			PullRadius = 150f,
+			PullForce = 300f
+		};
+		
+		CreateFootwareWithConfig(config);
+	}
+	
+	[Export]
+	public PackedScene FootwareTemplateScene { get; set; }
+
+	private void CreateFootwareWithConfig(FootwareConfig config)
+	{
+		if (FootwareTemplateScene == null) 
+		{
+			GD.PrintErr("FootwareTemplateScene is not assigned in the inspector!");
+			return;
+		}
+		
+		var footware = FootwareTemplateScene.Instantiate<FootwareTemplate>();
+		GetTree().CurrentScene.AddChild(footware);
+		
+		// Set position FIRST, before calling SetupFootware
+		footware.GlobalPosition = config.StartPosition;
+		footware.SetupFootware(config);
+		
+		// Debug output to check values
+		GD.Print($"Spawned footware - Speed: {config.Speed}, Direction: {config.Direction}, Position: {config.StartPosition}");
+	}
+
 }

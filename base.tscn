@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://btsfrucmuldrv"]
+[gd_scene load_steps=13 format=3 uid="uid://btsfrucmuldrv"]
 
 [ext_resource type="Script" path="res://CharacterBody2d.cs" id="1_akv8y"]
 [ext_resource type="Texture2D" uid="uid://c1np7vnfjt5ga" path="res://icon.svg" id="1_fhuox"]
+[ext_resource type="PackedScene" uid="uid://f3wqgo50y6pc" path="res://FootwareTemplate.tscn" id="2_unfxh"]
 [ext_resource type="Script" path="res://TestFootWare.cs" id="3_vf6ay"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_7je4w"]
@@ -44,9 +45,10 @@ offset_right = 4400.0
 offset_bottom = 100.0
 color = Color(0, 0, 0, 1)
 
-[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+[node name="CharacterBody2D" type="CharacterBody2D" parent="." groups=["player"]]
 position = Vector2(600, 535)
 script = ExtResource("1_akv8y")
+FootwareTemplateScene = ExtResource("2_unfxh")
 
 [node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
 texture = ExtResource("1_fhuox")
@@ -93,6 +95,7 @@ max_value = -300.0
 value = -400.0
 
 [node name="Label" type="Label" parent="CharacterBody2D/JumpBar"]
+layout_mode = 0
 offset_left = -10.0
 offset_top = -30.0
 offset_right = 30.0
@@ -101,6 +104,7 @@ text = "100"
 label_settings = SubResource("LabelSettings_fwuvw")
 
 [node name="Label2" type="Label" parent="CharacterBody2D/JumpBar"]
+layout_mode = 0
 offset_left = -10.0
 offset_top = 200.0
 offset_right = 38.0
@@ -116,6 +120,7 @@ max_value = 1700.0
 value = 1300.0
 
 [node name="Label" type="Label" parent="CharacterBody2D/GravBar"]
+layout_mode = 0
 offset_left = -10.0
 offset_top = -30.0
 offset_right = 30.0
@@ -124,6 +129,7 @@ text = "100"
 label_settings = SubResource("LabelSettings_fwuvw")
 
 [node name="Label2" type="Label" parent="CharacterBody2D/GravBar"]
+layout_mode = 0
 offset_left = -10.0
 offset_top = 200.0
 offset_right = 38.0
@@ -139,6 +145,7 @@ max_value = 650.0
 value = 300.0
 
 [node name="Label" type="Label" parent="CharacterBody2D/DJBar"]
+layout_mode = 0
 offset_left = -10.0
 offset_top = -30.0
 offset_right = 30.0
@@ -147,6 +154,7 @@ text = "100"
 label_settings = SubResource("LabelSettings_fwuvw")
 
 [node name="Label2" type="Label" parent="CharacterBody2D/DJBar"]
+layout_mode = 0
 offset_top = 200.0
 offset_right = 48.0
 offset_bottom = 223.0
@@ -161,6 +169,7 @@ max_value = 0.2
 value = 0.13
 
 [node name="Label" type="Label" parent="CharacterBody2D/DJTBar"]
+layout_mode = 0
 offset_left = -10.0
 offset_top = -30.0
 offset_right = 30.0
@@ -169,6 +178,7 @@ text = "100"
 label_settings = SubResource("LabelSettings_fwuvw")
 
 [node name="Label2" type="Label" parent="CharacterBody2D/DJTBar"]
+layout_mode = 0
 offset_top = 200.0
 offset_right = 48.0
 offset_bottom = 223.0
