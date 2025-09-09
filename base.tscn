@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://btsfrucmuldrv"]
+[gd_scene load_steps=14 format=3 uid="uid://btsfrucmuldrv"]
 
 [ext_resource type="Script" path="res://CharacterBody2d.cs" id="1_akv8y"]
 [ext_resource type="Texture2D" uid="uid://c1np7vnfjt5ga" path="res://icon.svg" id="1_fhuox"]
 [ext_resource type="PackedScene" uid="uid://f3wqgo50y6pc" path="res://FootwareTemplate.tscn" id="2_unfxh"]
+[ext_resource type="Texture2D" uid="uid://d2x63g3gl2dh1" path="res://wendy1.png" id="3_6wtpg"]
 [ext_resource type="Script" path="res://TestFootWare.cs" id="3_vf6ay"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_7je4w"]
@@ -12,7 +13,7 @@ friction = 0.53
 size = Vector2(5000, 200)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o3hh8"]
-size = Vector2(120, 120)
+size = Vector2(92, 192)
 
 [sub_resource type="LabelSettings" id="LabelSettings_fwuvw"]
 
@@ -46,12 +47,13 @@ offset_bottom = 100.0
 color = Color(0, 0, 0, 1)
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="." groups=["player"]]
-position = Vector2(600, 535)
+position = Vector2(600, 503)
 script = ExtResource("1_akv8y")
 FootwareTemplateScene = ExtResource("2_unfxh")
 
 [node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
-texture = ExtResource("1_fhuox")
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("3_6wtpg")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
 shape = SubResource("RectangleShape2D_o3hh8")

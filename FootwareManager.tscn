@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://b5qvgd1wxa1b8"]
+
+[ext_resource type="Script" path="res://FootwareManager.cs" id="1_2gktf"]
+[ext_resource type="PackedScene" uid="uid://f3wqgo50y6pc" path="res://FootwareTemplate.tscn" id="2_furky"]
+
+[node name="FootwareManager" type="Node2D"]
+script = ExtResource("1_2gktf")
+FootwareTemplateScene = ExtResource("2_furky")

@@ -4,15 +4,26 @@ public partial class FootwareManager : Node
 {
 	[Export]
 	public PackedScene FootwareTemplateScene { get; set; }
-	
-	public void SpawnFootware(Vector2 position, Vector2 direction, FootwareConfig config)
+
+	// This method now only needs the config object, which contains all data.
+	public void SpawnFootware(FootwareConfig config)
 	{
-		if (FootwareTemplateScene == null) return;
-		
+		if (FootwareTemplateScene == null) 
+		{
+			GD.PrintErr("Footware Manager: FootwareTemplateScene is not set in the inspector!");
+			return;
+		}
+
+		// 1. Instantiate the scene
 		var instance = FootwareTemplateScene.Instantiate<FootwareTemplate>();
-		instance.SetupFootware(config);
+
+		// 2. Set up ALL properties from the config BEFORE adding to the scene.
+		// This single method call should set position, direction, speed, etc.
+		instance.SetupFootware(config); 
+
+		// 3. Add the fully configured node to the scene tree.
 		GetTree().CurrentScene.AddChild(instance);
-		instance.GlobalPosition = position;
-		instance.SetDirection(direction);
+
+		GD.Print($"Spawned footware at {instance.GlobalPosition} with Speed: {instance.Speed}");
 	}
 }

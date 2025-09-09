@@ -11,6 +11,10 @@ public partial class FootwareTemplate : Area2D
 	[Export] public float PullRadius { get; set; } = 100f;
 	[Export] public float PullForce { get; set; } = 200f;
 	
+	private CharacterBody2D _capturedPlayer = null;
+	private bool _isPlayerCaptured = false;
+	private const float CAPTURE_DISTANCE = 40f;
+	
 	private Vector2 direction = Vector2.Zero;
 	private float currentLifetime;
 	private CollisionShape2D pullDetectionArea;
@@ -25,7 +29,6 @@ public partial class FootwareTemplate : Area2D
 		BodyEntered += OnBodyEntered;
 		BodyExited += OnBodyExited;
 		
-		// Set up pull detection if needed
 		if (Pull)
 		{
 			SetupPullDetection();
@@ -66,7 +69,17 @@ public partial class FootwareTemplate : Area2D
 		currentLifetime -= (float)delta;
 		if (currentLifetime <= 0)
 		{
-			GD.Print("Footware lifetime expired, destroying");
+			GD.Print("Footware lifetime expired, destroying.");
+			
+			if (_isPlayerCaptured && IsInstanceValid(_capturedPlayer) && _capturedPlayer is CharacterBody2d playerScript)
+			{
+				playerScript.IsCaptured = false; 
+				
+				var originalParent = GetParent();
+				_capturedPlayer.Reparent(originalParent); // Give player back to the main scene.
+				GD.Print("Released captured player.");
+			}
+
 			QueueFree();
 			return;
 		}
@@ -80,6 +93,8 @@ public partial class FootwareTemplate : Area2D
 
 	public void SetupFootware(FootwareConfig config)
 	{
+		// This method correctly sets everything from the config object.
+		GlobalPosition = config.StartPosition;
 		direction = config.Direction.Normalized();
 		Speed = config.Speed;
 		Pull = config.Pull;
@@ -88,19 +103,9 @@ public partial class FootwareTemplate : Area2D
 		DestroyOnHit = config.DestroyOnHit;
 		PullRadius = config.PullRadius;
 		PullForce = config.PullForce;
-		currentLifetime = Lifetime;
-		
-		GD.Print($"SetupFootware called - Speed: {Speed}, Direction: {direction}, Pull: {Pull}");
-		
-		// Update pull detection if it exists
-		if (Pull && pullDetectionArea != null)
-		{
-			if (pullDetectionArea.Shape is CircleShape2D circle)
-			{
-				circle.Radius = PullRadius;
-			}
-		}
+		currentLifetime = Lifetime; 
 	}
+
 
 	public void SetDirection(Vector2 newDirection)
 	{
@@ -110,44 +115,58 @@ public partial class FootwareTemplate : Area2D
 
 	private void HandlePullBehavior(double delta)
 	{
-		var spaceState = GetWorld2D().DirectSpaceState;
-		var query = new PhysicsShapeQueryParameters2D();
-		
-		var circleShape = new CircleShape2D();
-		circleShape.Radius = PullRadius;
-		query.Shape = circleShape;
-		query.Transform = Transform2D.Identity.Translated(GlobalPosition);
-		query.CollisionMask = 1; // Player layer
-		
-		var results = spaceState.IntersectShape(query);
-		
-		foreach (var result in results)
+		// If the player is already captured, we don't need to do anything else.
+		// The parenting system will handle the movement.
+		if (_isPlayerCaptured)
 		{
-			var body = result["collider"].As<Node2D>();
-			// FIX: Convert StringName to string before calling ToLower()
-			if (body != null && (body.IsInGroup("player") || body.Name.ToString().ToLower().Contains("character")))
+			return;
+		}
+
+		// --- Part 1: Find a Player to Pull ---
+		if (_capturedPlayer == null)
+		{
+			// Use GetOverlappingBodies to find potential targets.
+			var bodies = GetOverlappingBodies();
+			foreach (var body in bodies)
 			{
-				var distance = GlobalPosition.DistanceTo(body.GlobalPosition);
-				if (distance > 5f) // Avoid pulling when too close
+				if (body is CharacterBody2D player && player.IsInGroup("player"))
 				{
-					var pullDirection = (GlobalPosition - body.GlobalPosition).Normalized();
-					
-					if (body is CharacterBody2D characterBody)
-					{
-						var pullVelocity = pullDirection * PullForce * (float)delta;
-						characterBody.Velocity += pullVelocity;
-						GD.Print($"Pulling {body.Name} with force: {pullVelocity}");
-					}
+					_capturedPlayer = player;
+					GD.Print($"Found player '{player.Name}' to pull.");
+					break; // Found our target, no need to look further.
 				}
 			}
 		}
+
+		// --- Part 2: Pull the Player Towards the Center ---
+		if (_capturedPlayer is CharacterBody2d playerScript)
+		{
+			var distanceToCenter = GlobalPosition.DistanceTo(_capturedPlayer.GlobalPosition);
+
+			// If the player is close enough, capture them.
+			if (distanceToCenter <= CAPTURE_DISTANCE)
+			{
+				playerScript.IsCaptured = true; 
+				GD.Print("Player is close enough. Capturing!");
+				_isPlayerCaptured = true;
+				_capturedPlayer.Reparent(this); // Make the player a child of this pull area.
+				_capturedPlayer.GlobalPosition = GlobalPosition; // Snap to the center.
+			}
+			else // Otherwise, keep pulling them in.
+			{
+				// Use Vector2.MoveToward for smooth, frame-rate independent movement.
+				var newPosition = _capturedPlayer.GlobalPosition.MoveToward(GlobalPosition, PullForce * (float)delta);
+				_capturedPlayer.GlobalPosition = newPosition;
+				GD.Print($"Pulling player. Distance: {distanceToCenter}");
+			}
+		}
 	}
+
 
 	private void OnBodyEntered(Node2D body)
 	{
 		GD.Print($"Body entered: {body.Name}");
 		
-		// FIX: Convert StringName to string before calling ToLower()
 		if (Pull && (body.IsInGroup("player") || body.Name.ToString().ToLower().Contains("character")))
 		{
 			nearbyTargets.Add(body);

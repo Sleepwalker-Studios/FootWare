@@ -15,6 +15,10 @@ run/main_scene="res://base.tscn"
 config/features=PackedStringArray("4.3", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+FootwareManager="*res://FootwareManager.tscn"
+
 [display]
 
 window/size/viewport_width=1200

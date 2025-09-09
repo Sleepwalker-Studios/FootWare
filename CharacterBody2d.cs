@@ -9,6 +9,8 @@ public partial class CharacterBody2d : CharacterBody2D
 		{ footware.test, 800 },
 	};
 	
+	public bool IsCaptured { get; set; } = false;
+	
 	public Panel panel;
 	public TextureButton test;
 	public Camera2D camera;
@@ -24,6 +26,8 @@ public partial class CharacterBody2d : CharacterBody2D
 	public Label djtlabel;
 	public Timer coyote;
 	public Timer buffer;
+	
+	private FootwareManager _footwareManager;
 	
 	public enum footware{none, test};
 	
@@ -67,9 +71,14 @@ public partial class CharacterBody2d : CharacterBody2D
 		coyote = GetParent().GetNode<Timer>("Coyote");
 		buffer = GetParent().GetNode<Timer>("Buffer");
 		current = footware.none;
+		_footwareManager = GetNode<FootwareManager>("/root/FootwareManager");
 	}
 	
 	public override void _PhysicsProcess(double delta) {
+		
+		if(IsCaptured){
+			return;
+		}
 		
 		GD.Print(coyotebool);
 		
@@ -232,6 +241,7 @@ public partial class CharacterBody2d : CharacterBody2D
 		}
 	}
 	
+
 	private void ShootBullet()
 	{
 		var mousePos = GetGlobalMousePosition();
@@ -239,51 +249,49 @@ public partial class CharacterBody2d : CharacterBody2D
 		
 		var config = new FootwareConfig
 		{
-			StartPosition = GlobalPosition,
+			StartPosition = GlobalPosition, // The bullet starts at the player's position
 			Direction = direction,
 			Speed = 500f,
-			Pull = false,
-			Damage = 25,
-			Lifetime = 3f,
-			DestroyOnHit = true
+			Lifetime = 20f,
+			DestroyOnHit = false,
 		};
 		
-		CreateFootwareWithConfig(config);
+		_footwareManager.SpawnFootware(config);
 	}
-	
+
 	private void PerformKick()
 	{
+		var mousePos = GetGlobalMousePosition();
+		var direction = (mousePos - GlobalPosition).Normalized();
+		
 		var config = new FootwareConfig
 		{
-			StartPosition = GlobalPosition,
-			Direction = Vector2.Zero,
-			Speed = 0f,
-			Pull = false,
-			Damage = 50,
-			Lifetime = 0.5f,
-			DestroyOnHit = false
+			StartPosition = GlobalPosition, // The kick originates from the player
+			Direction = direction,
+			Speed = 1400f,
+			Lifetime = 0.1f,
+			DestroyOnHit = false,
 		};
-		
-		CreateFootwareWithConfig(config);
+		_footwareManager.SpawnFootware(config);
 	}
-	
+
 	private void CreatePullEffect()
 	{
+		var mousePos = GetGlobalMousePosition();
+		var direction = (mousePos - GlobalPosition).Normalized();
+		
 		var config = new FootwareConfig
 		{
-			StartPosition = GlobalPosition,
-			Direction = Vector2.Zero,
-			Speed = 0f,
+			StartPosition = GlobalPosition, // The effect is centered on the player
+			Direction = direction,
+			Speed = 700f,
+			Lifetime = 1f,
 			Pull = true,
-			Damage = 0,
-			Lifetime = 2f,
 			DestroyOnHit = false,
-			PullRadius = 150f,
-			PullForce = 300f
 		};
-		
-		CreateFootwareWithConfig(config);
+		_footwareManager.SpawnFootware(config);
 	}
+
 	
 	[Export]
 	public PackedScene FootwareTemplateScene { get; set; }
@@ -296,15 +304,19 @@ public partial class CharacterBody2d : CharacterBody2D
 			return;
 		}
 		
+		// 1. Instantiate the scene
 		var footware = FootwareTemplateScene.Instantiate<FootwareTemplate>();
-		GetTree().CurrentScene.AddChild(footware);
 		
-		// Set position FIRST, before calling SetupFootware
+		// 2. Set ALL properties BEFORE adding to the scene tree
 		footware.GlobalPosition = config.StartPosition;
 		footware.SetupFootware(config);
+		
+		// 3. Add the fully configured node to the scene
+		GetTree().CurrentScene.AddChild(footware);
 		
 		// Debug output to check values
 		GD.Print($"Spawned footware - Speed: {config.Speed}, Direction: {config.Direction}, Position: {config.StartPosition}");
 	}
+
 
 }
