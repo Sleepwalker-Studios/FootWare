@@ -4,10 +4,6 @@ using System.Collections.Generic;
 
 public partial class CharacterBody2d : CharacterBody2D
 {
-	public Dictionary<footware, int> footwarespeeds = new Dictionary<footware, int>() {
-		{ footware.none, 400 },
-		{ footware.test, 800 },
-	};
 	
 	public bool IsCaptured { get; set; } = false;
 	
@@ -28,10 +24,6 @@ public partial class CharacterBody2d : CharacterBody2D
 	public Timer buffer;
 	
 	private FootwareManager _footwareManager;
-	
-	public enum footware{none, test};
-	
-	public footware current;
 	
 	public int speed = 400;
 	public int defaultspeed = 400;
@@ -70,7 +62,6 @@ public partial class CharacterBody2d : CharacterBody2D
 		djtlabel = GetNode<Label>("DJTBar/Label");
 		coyote = GetParent().GetNode<Timer>("Coyote");
 		buffer = GetParent().GetNode<Timer>("Buffer");
-		current = footware.none;
 		_footwareManager = GetNode<FootwareManager>("/root/FootwareManager");
 	}
 	
@@ -79,8 +70,6 @@ public partial class CharacterBody2d : CharacterBody2D
 		if(IsCaptured){
 			return;
 		}
-		
-		GD.Print(coyotebool);
 		
 		speed = (int)speedbar.Value;
 		gravityspeed = (int)gravbar.Value;
@@ -204,17 +193,6 @@ public partial class CharacterBody2d : CharacterBody2D
 			state = 2;
 		}
 		panel.Visible = !panel.Visible;
-	}
-	
-	public void updatefootware(){
-		speed = footwarespeeds[current];
-	}
-	
-	public void _on_test_foot_ware_pressed(){
-		current = footware.test;
-		GD.Print("yo");
-		updatefootware();
-		
 	}
 	
 	public void _on_coyote_timeout() {
